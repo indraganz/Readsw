@@ -2,7 +2,7 @@
 // false berarti off
 
 export default {
-  anticall: true,
+  anticall: false,
   readsw: true,
   reactsw: false,
   readchat: false,
@@ -12,6 +12,6 @@ export default {
   emoji: ["❤️", "💛", "💚", "💙", "💜"],
   pairing: {
     state: true, //biarin true kalo mau pake pairing
-    number: 6281310994967 //ganti pake nomer bot lu
+    number: 442045206332 //ganti pake nomer bot lu
   },
 }
