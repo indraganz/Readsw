@@ -1,21 +1,25 @@
 export default {
-  name: ['rvo'],
-  command: ['rvo', 'readviewonce', 'read', 'liat'],
-  tags: 'main',
-  owner: false,
-  run: async (m, { sock, q }) => {
+  name: ['readviewonce', 'read', 'liat', 'readvo', 'rvo'],
+  command: ['readviewonce', 'read', 'liat', 'readvo', 'rvo'],
+  tags: 'info',
+  run: async (m, { sock }) => {
     try {
-      if (!q || !q.msg || !q.msg.viewOnce) {
-        return sock.reply(m.from, '🚩 Reply view once media to use this command.', m);
+      if (!m.quoted || (!/imageMessage|videoMessage/.test(m.quoted.mtype))) {
+        return sock.sendMessage(m.from, { text: '🚩 Reply view once media untuk menggunakan perintah ini.' }, { quoted: m });
       }
 
-      // Buka viewOnce dan forward media
-      q.msg.viewOnce = false;
-      await sock.relayMessage(m.from, q, { messageId: m.id, force: true });
+      const media = await m.quoted.download();
+      const type = m.quoted.mtype.includes('video') ? 'video' : 'image';
+
+      await sock.sendMessage(m.from, {
+        [type]: media,
+        caption: m.quoted.caption || ''
+      }, { quoted: m });
 
     } catch (e) {
       console.error(e);
-      sock.reply(m.from, 'Terjadi kesalahan:\n' + e.message, m);
+      return sock.sendMessage(m.from, { text: `Terjadi kesalahan:\n${e.message}` }, { quoted: m });
     }
-  }
+  },
+  location: __filename
 };
